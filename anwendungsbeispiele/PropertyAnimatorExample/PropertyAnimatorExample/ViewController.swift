@@ -9,38 +9,50 @@
 import UIKit
 
 class ViewController: UIViewController {
-
-    @IBOutlet weak var cloudImgView1: UIImageView!
-    @IBOutlet weak var cloudImgView2: UIImageView!
+    
+    let animate = UIViewPropertyAnimator(duration: 5.0, curve: .linear)
+    
+    @IBOutlet weak var plane: UIImageView!
     @IBOutlet weak var cloudImgView3: UIImageView!
     @IBOutlet weak var cloudImageView4: UIImageView!
+        
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        initialPlane()
+        animatePlane()
         animateClouds()
     }
+    
+    
+    func initialPlane(){
+        self.plane.alpha = 0
+    }
+    
+    
+    func animatePlane(){
+        animate.addAnimations {
+            self.plane.alpha = 1
+        }
         
+        animate.addAnimations({
+            self.plane.frame.size.height *= 1.6
+            self.plane.frame.size.width *= 1.6
+            self.plane.frame = self.self.plane.frame.offsetBy(dx: 650, dy: 10)
+        },delayFactor: 0.5)
+        
+        animate.addCompletion{_ in
+            print("Ready")
+        }
+    }
+    
+
     private func animateClouds() {
-      let options: UIView.AnimationOptions = [.curveEaseInOut,
-                                              .repeat,
-                                              .autoreverse]
-      
-      UIView.animate(withDuration: 2.9,
-                     delay: 0,
-                     options: options,
-                     animations: { [weak self] in
-                      self?.cloudImgView1.frame.size.height *= 1.18
-                      self?.cloudImgView1.frame.size.width *= 1.18
-      }, completion: nil)
-      
-      UIView.animate(withDuration: 3.0,
-                     delay: 0.2,
-                     options: options,
-                     animations: { [weak self] in
-                        self?.cloudImgView2.frame.size.height *= 1.28
-                      self?.cloudImgView2.frame.size.width *= 1.28
-      }, completion: nil)
-        
+       // UIView.animate Beispiele
+        let options: UIView.AnimationOptions = [.curveEaseInOut,
+        .repeat,
+        .autoreverse]
+
         UIView.animate(withDuration: 2.4,
                        delay: 0.1,
                        options: options,
@@ -48,7 +60,7 @@ class ViewController: UIViewController {
                         self?.cloudImgView3.frame.size.height *= 1.15
                         self?.cloudImgView3.frame.size.width *= 1.15
         }, completion: nil)
-        
+
         UIView.animate(withDuration: 3.2,
                        delay: 0.5,
                        options: options,
@@ -56,8 +68,12 @@ class ViewController: UIViewController {
                         self?.cloudImageView4.frame.size.height *= 1.23
                         self?.cloudImageView4.frame.size.width *= 1.23
         }, completion: nil)
-      
     }
-
+    
+    
+    @IBAction func startAnimateUIButton(_ sender: UIButton) {
+        animate.startAnimation()
+    }
+    
 }
 
